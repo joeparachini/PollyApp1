@@ -14,8 +14,8 @@ The Fix:
 - A pure, functional, 'Result' based approach
 - Similar to the ServiceResult. Operations either 'Succeed' or they 'Fail'. They always have Data.
 	- You probably don't care about data from a 'Failed' operation
-- They never throw or change application state, but can respond to application events (i.e. shutdown)
-- If there's a failure it's very explicit and the caller and can respond appropriately
+- Methods never throw or change application state, but can respond to application events (i.e. shutdown)
+- When (not if) there's a failure - it's very explicit and the caller and can respond appropriately
 
 Bonus:
 - You can add retries to this approach very easily
