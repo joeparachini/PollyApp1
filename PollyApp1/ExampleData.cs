@@ -1,6 +1,6 @@
 namespace ConsoleApp1;
 
-public record FooData()
+public record ExampleData()
 {
     public string Name;
 }

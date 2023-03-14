@@ -4,9 +4,9 @@ using Polly.Contrib.Simmy.Outcomes;
 
 namespace ConsoleApp1;
 
-public class FooService
+public class ExampleService
 {
-    public async Task<PolicyResult<FooData>> HappyPath()
+    public async Task<PolicyResult<ExampleData>> HappyPath()
     {
         // Define the Polly Context
         var myContext = new Context("HappyPath")
@@ -25,7 +25,7 @@ public class FooService
         return result;
     }
 
-    public async Task<PolicyResult<FooData>> SadPath()
+    public async Task<PolicyResult<ExampleData>> SadPath()
     {
         var myPolicy = FlexjetRetryPolicies.FlexjetDefaultPolicy;
         var result = await myPolicy.ExecuteAndCaptureAsync(ThrowException);
@@ -33,11 +33,11 @@ public class FooService
         return result;
     }
     
-    public async Task<PolicyResult<FooData>> ChaosPath()
+    public async Task<PolicyResult<ExampleData>> ChaosPath()
     {
         var myPolicy = FlexjetRetryPolicies.FlexjetDefaultPolicy;
 
-        var chaosPolicy = MonkeyPolicy.InjectResultAsync<FooData>(with =>
+        var chaosPolicy = MonkeyPolicy.InjectResultAsync<ExampleData>(with =>
         {
             with.InjectionRate(1)
                 .Enabled(true);
@@ -52,23 +52,23 @@ public class FooService
         return result;
     }
 
-    private static async Task<FooData> GetData()
+    private static async Task<ExampleData> GetData()
     {
         await Task.FromResult(true);
         
-        return new FooData()
+        return new ExampleData()
         {
             Name = "Joe P"
         };
     }
     
-    private static async Task<FooData> ThrowException()
+    private static async Task<ExampleData> ThrowException()
     {
         await Task.FromResult(true);
 
         throw new Exception("SOMETHING BAD HAPPENED");
         
-        return new FooData()
+        return new ExampleData()
         {
             Name = "Joe P"
         };

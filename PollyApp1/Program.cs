@@ -11,9 +11,10 @@ The Problem:
 	2 : The operation failed, and so there's no results
 
 The Fix:
-- A declarative, functional, 'Result' based approach
-- Similar to the ServiceResult. Operations either 'Succeed' or they 'Fail', but they always have Data. 
+- A pure, functional, 'Result' based approach
+- Similar to the ServiceResult. Operations either 'Succeed' or they 'Fail'. They always have Data.
 	- You probably don't care about data from a 'Failed' operation
+- They never throw or change application state, but can respond to application events (i.e. shutdown)
 - If there's a failure it's very explicit and the caller and can respond appropriately
 
 Bonus:
@@ -22,52 +23,51 @@ Bonus:
 https://github.com/App-vNext/Polly
  */
 
-var fooService = new FooService();
-
+var exampleService = new ExampleService();
 
 Console.Clear();
 
 Console.WriteLine("HappyPath Start");
-var fooServiceResult = await fooService.HappyPath();
+var exampleServiceResult = await exampleService.HappyPath();
 
-Console.WriteLine("HappyPath ServiceResult Outcome: " + fooServiceResult.Outcome);
+Console.WriteLine("HappyPath ServiceResult Outcome: " + exampleServiceResult.Outcome);
 
-if (fooServiceResult.Outcome == OutcomeType.Failure)
+if (exampleServiceResult.Outcome == OutcomeType.Failure)
 {
-	Console.WriteLine("HappyPath ServiceResult FinalException: " + fooServiceResult.FinalException);
+	Console.WriteLine("HappyPath ServiceResult FinalException: " + exampleServiceResult.FinalException);
 	// return;
 }
-Console.WriteLine("HappyPath ServiceResult Result: " + fooServiceResult.Result);
+Console.WriteLine("HappyPath ServiceResult Result: " + exampleServiceResult.Result);
 Console.WriteLine("Press Any key to continue");
 Console.ReadKey();
 
 
 
 Console.WriteLine("SadPath Start");
-fooServiceResult = await fooService.SadPath();
+exampleServiceResult = await exampleService.SadPath();
     
-Console.WriteLine("SadPath ServiceResult Outcome: " + fooServiceResult.Outcome);
+Console.WriteLine("SadPath ServiceResult Outcome: " + exampleServiceResult.Outcome);
 
-if (fooServiceResult.Outcome == OutcomeType.Failure)
+if (exampleServiceResult.Outcome == OutcomeType.Failure)
 {
-	Console.WriteLine("SadPath ServiceResult FinalException: " + fooServiceResult.FinalException);
+	Console.WriteLine("SadPath ServiceResult FinalException: " + exampleServiceResult.FinalException);
 	// return;
 }
-Console.WriteLine("SadPath ServiceResult Result: " + fooServiceResult.Result);
+Console.WriteLine("SadPath ServiceResult Result: " + exampleServiceResult.Result);
 Console.WriteLine("Press Any key to continue");
 Console.ReadKey();
 
 Console.WriteLine("ChaosPath Start");
-fooServiceResult = await fooService.ChaosPath();
+exampleServiceResult = await exampleService.ChaosPath();
     
-Console.WriteLine("ChaosPath ServiceResult Outcome: " + fooServiceResult.Outcome);
+Console.WriteLine("ChaosPath ServiceResult Outcome: " + exampleServiceResult.Outcome);
 
-if (fooServiceResult.Outcome == OutcomeType.Failure)
+if (exampleServiceResult.Outcome == OutcomeType.Failure)
 {
-	Console.WriteLine("SadPath ServiceResult FinalException: " + fooServiceResult.FinalException);
+	Console.WriteLine("SadPath ServiceResult FinalException: " + exampleServiceResult.FinalException);
 	// return;
 }
-Console.WriteLine("ChaosPath ServiceResult Result: " + fooServiceResult.Result);
+Console.WriteLine("ChaosPath ServiceResult Result: " + exampleServiceResult.Result);
 
 
 
