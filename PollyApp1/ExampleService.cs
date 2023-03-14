@@ -29,6 +29,8 @@ public class ExampleService
     {
         var myPolicy = FlexjetRetryPolicies.FlexjetDefaultPolicy;
         var result = await myPolicy.ExecuteAndCaptureAsync(ThrowException);
+
+        // return PolicyResult<ExampleData>.Failure(new Exception("Manually Failed Operation"), ExceptionType.HandledByThisPolicy, new Context());
         
         return result;
     }
