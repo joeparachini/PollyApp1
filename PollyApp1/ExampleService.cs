@@ -6,7 +6,7 @@ namespace ConsoleApp1;
 
 public class ExampleService
 {
-    public async Task<PolicyResult<ExampleData>> HappyPath()
+    public async Task<PolicyResult<ExampleData>> HappyPath(CancellationToken ct = new())
     {
         // Define the Polly Context
         var myContext = new Context("HappyPath")
@@ -19,24 +19,40 @@ public class ExampleService
         var myPolicy = FlexjetRetryPolicies.FlexjetDefaultPolicy;
         
         // Execute And Capture the method
-        var result = await myPolicy.ExecuteAndCaptureAsync(GetData);
+        // var result = await myPolicy.ExecuteAndCaptureAsync(GetData);
+
+        var result = await myPolicy.ExecuteAndCaptureAsync(GetData, myContext, ct);
 
         // Return the result
         return result;
     }
 
-    public async Task<PolicyResult<ExampleData>> SadPath()
+    public async Task<PolicyResult<ExampleData>> SadPath(CancellationToken ct = new())
     {
+        // Define the Polly Context
+        var myContext = new Context("HappyPath")
+        {
+            ["MessageGuid"] = Guid.NewGuid(),
+            ["EntityId"] = Guid.NewGuid(),
+        };
+        
         var myPolicy = FlexjetRetryPolicies.FlexjetDefaultPolicy;
-        var result = await myPolicy.ExecuteAndCaptureAsync(ThrowException);
-
+        var result = await myPolicy.ExecuteAndCaptureAsync(ThrowException, myContext, ct);
+        
         // return PolicyResult<ExampleData>.Failure(new Exception("Manually Failed Operation"), ExceptionType.HandledByThisPolicy, new Context());
         
         return result;
     }
     
-    public async Task<PolicyResult<ExampleData>> ChaosPath()
+    public async Task<PolicyResult<ExampleData>> ChaosPath(CancellationToken ct = new())
     {
+        // Define the Polly Context
+        var myContext = new Context("HappyPath")
+        {
+            ["MessageGuid"] = Guid.NewGuid(),
+            ["EntityId"] = Guid.NewGuid(),
+        };
+        
         var myPolicy = FlexjetRetryPolicies.FlexjetDefaultPolicy;
 
         var chaosPolicy = MonkeyPolicy.InjectResultAsync<ExampleData>(with =>
@@ -49,12 +65,13 @@ public class ExampleService
         
         var newPolicy = myPolicy.WrapAsync(chaosPolicy);
         
-        var result = await newPolicy.ExecuteAndCaptureAsync(GetData);
+        var result = await newPolicy.ExecuteAndCaptureAsync(GetData, myContext, ct);
 
         return result;
     }
 
-    private static async Task<ExampleData> GetData()
+    
+    private async Task<ExampleData> GetData(Context context, CancellationToken ct)
     {
         await Task.FromResult(true);
         
@@ -64,15 +81,10 @@ public class ExampleService
         };
     }
     
-    private static async Task<ExampleData> ThrowException()
+    private static async Task<ExampleData> ThrowException(Context context, CancellationToken ct)
     {
         await Task.FromResult(true);
 
         throw new Exception("SOMETHING BAD HAPPENED");
-        
-        return new ExampleData()
-        {
-            Name = "Joe P"
-        };
     }
 }
