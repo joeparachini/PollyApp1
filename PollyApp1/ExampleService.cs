@@ -30,7 +30,7 @@ public class ExampleService
     public async Task<PolicyResult<ExampleData>> SadPath(CancellationToken ct = new())
     {
         // Define the Polly Context
-        var myContext = new Context("HappyPath")
+        var myContext = new Context("SadPath")
         {
             ["MessageGuid"] = Guid.NewGuid(),
             ["EntityId"] = Guid.NewGuid(),
@@ -85,6 +85,13 @@ public class ExampleService
     {
         await Task.FromResult(true);
 
-        throw new Exception("SOMETHING BAD HAPPENED");
+        throw new DoNotRetryException("DoNotRetryException");
+    }
+}
+
+public class DoNotRetryException : Exception
+{
+    public DoNotRetryException(string message) : base(message)
+    {
     }
 }

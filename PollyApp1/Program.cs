@@ -68,6 +68,3 @@ if (exampleServiceResult.Outcome == OutcomeType.Failure)
 	// return;
 }
 Console.WriteLine("ChaosPath ServiceResult Result: " + exampleServiceResult.Result);
-
-
-
